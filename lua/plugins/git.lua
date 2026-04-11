@@ -25,6 +25,13 @@ return {
         ignore_whitespace = false,
       },
       current_line_blame_formatter = "  <author>, <author_time:%Y-%m-%d> — <summary>",
+      preview_config = {
+        border = "rounded",
+        style = "minimal",
+        relative = "cursor",
+        row = 0,
+        col = 1,
+      },
       on_attach = function(bufnr)
         local gs = require("gitsigns")
         local map = function(mode, lhs, rhs, desc)

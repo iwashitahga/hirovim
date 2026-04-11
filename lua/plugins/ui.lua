@@ -9,13 +9,17 @@ return {
       transparent = true,
       styles = {
         sidebars = "transparent",
-        floats = "transparent",
+        -- Floats keep their own background so `winblend` has something
+        -- to blend against.
+        floats = "normal",
       },
       on_highlights = function(hl, c)
         -- Keep line numbers / signs readable on a transparent background.
         hl.LineNr = { fg = c.fg_gutter }
         hl.CursorLineNr = { fg = c.orange, bold = true }
         hl.SignColumn = { bg = "NONE" }
+        -- Keep float borders clearly visible.
+        hl.FloatBorder = { fg = c.blue, bg = c.bg_float }
       end,
     },
     config = function(_, opts)
@@ -60,7 +64,11 @@ return {
         [[██   ████   ████   ██ ██      ██]],
       }
       dashboard.section.buttons.val = {
-        dashboard.button("f", "  Find file", "<cmd>Telescope find_files<CR>"),
+        dashboard.button(
+          "f",
+          "  Find file",
+          ":lua require('telescope.builtin').find_files({ initial_mode = 'normal' })<CR>"
+        ),
         dashboard.button("r", "  Recent files", "<cmd>Telescope oldfiles<CR>"),
         dashboard.button("g", "  Live grep", "<cmd>Telescope live_grep<CR>"),
         dashboard.button("n", "  New file", "<cmd>ene <BAR> startinsert<CR>"),

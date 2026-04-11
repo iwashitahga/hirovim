@@ -11,7 +11,11 @@ return {
       },
     },
     keys = {
-      { "<leader>ff", "<cmd>Telescope find_files<CR>", desc = "Find files" },
+      {
+        "<leader>ff",
+        function() require("telescope.builtin").find_files({ initial_mode = "normal" }) end,
+        desc = "Find files (normal mode)",
+      },
       { "<leader>fg", "<cmd>Telescope live_grep<CR>", desc = "Live grep" },
       { "<leader>fb", "<cmd>Telescope buffers<CR>", desc = "Buffers" },
       { "<leader>fh", "<cmd>Telescope help_tags<CR>", desc = "Help tags" },

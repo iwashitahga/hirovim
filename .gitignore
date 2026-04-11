@@ -1,4 +1,4 @@
-# Old AstroNvim config, kept locally for reference
+# Previous nvim config, kept locally for reference
 nvim.bak/
 
 # Lazy.nvim runtime artifacts (not present when symlinked, but guard anyway)

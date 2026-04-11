@@ -1,5 +1,5 @@
 return {
-  -- vim-sandwich (ported from previous AstroNvim config)
+  -- vim-sandwich (ported from previous config)
   {
     "machakann/vim-sandwich",
     event = { "BufReadPost", "BufNewFile" },

@@ -1,4 +1,4 @@
--- Sidebar file explorer (the AstroNvim default).
+-- Sidebar file explorer.
 -- <leader>e toggles, <leader>o focuses.
 
 return {

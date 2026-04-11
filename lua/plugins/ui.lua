@@ -3,10 +3,25 @@ return {
     "folke/tokyonight.nvim",
     lazy = false,
     priority = 1000,
-    opts = { style = "storm", transparent = false },
+    opts = {
+      style = "day",
+      light_style = "day",
+      transparent = true,
+      styles = {
+        sidebars = "transparent",
+        floats = "transparent",
+      },
+      on_highlights = function(hl, c)
+        -- Keep line numbers / signs readable on a transparent background.
+        hl.LineNr = { fg = c.fg_gutter }
+        hl.CursorLineNr = { fg = c.orange, bold = true }
+        hl.SignColumn = { bg = "NONE" }
+      end,
+    },
     config = function(_, opts)
+      vim.o.background = "light"
       require("tokyonight").setup(opts)
-      vim.cmd.colorscheme("tokyonight")
+      vim.cmd.colorscheme("tokyonight-day")
     end,
   },
 

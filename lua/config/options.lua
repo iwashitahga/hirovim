@@ -23,7 +23,7 @@ opt.splitright = true
 opt.splitbelow = true
 
 opt.termguicolors = true
-opt.background = "dark"
+opt.background = "light"
 opt.pumheight = 10
 opt.showmode = false
 opt.laststatus = 3

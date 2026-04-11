@@ -29,11 +29,11 @@ return {
     dependencies = { "hrsh7th/cmp-nvim-lsp" },
     config = function()
       -- Diagnostics UI
-      vim.diagnostic.config({
+      vim.diagnostic.config {
         virtual_text = { prefix = "●" },
         severity_sort = true,
         float = { border = "rounded" },
-      })
+      }
 
       -- Global defaults applied to every server via wildcard config.
       local capabilities = require("cmp_nvim_lsp").default_capabilities()
@@ -58,7 +58,7 @@ return {
 
       -- The FileType event for the current buffer already fired before this
       -- plugin was lazy-loaded, so re-trigger it to attach servers to it.
-      vim.schedule(function() vim.cmd("silent! do FileType") end)
+      vim.schedule(function() vim.cmd "silent! do FileType" end)
 
       -- Buffer-local keymaps on attach.
       vim.api.nvim_create_autocmd("LspAttach", {
@@ -75,9 +75,8 @@ return {
           map("n", "K", vim.lsp.buf.hover, "Hover")
           map("n", "<leader>rn", vim.lsp.buf.rename, "Rename")
           map({ "n", "v" }, "<leader>ca", vim.lsp.buf.code_action, "Code action")
-          map("n", "<leader>lf", function() vim.lsp.buf.format({ async = true }) end, "Format")
-          map("n", "[d", function() vim.diagnostic.jump({ count = -1 }) end, "Prev diagnostic")
-          map("n", "]d", function() vim.diagnostic.jump({ count = 1 }) end, "Next diagnostic")
+          map("n", "[d", function() vim.diagnostic.jump { count = -1 } end, "Prev diagnostic")
+          map("n", "]d", function() vim.diagnostic.jump { count = 1 } end, "Next diagnostic")
         end,
       })
     end,

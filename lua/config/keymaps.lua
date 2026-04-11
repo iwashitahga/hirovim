@@ -21,9 +21,9 @@ map("n", "<C-Down>", "<cmd>resize -2<CR>", "Decrease window height")
 map("n", "<C-Left>", "<cmd>vertical resize -2<CR>", "Decrease window width")
 map("n", "<C-Right>", "<cmd>vertical resize +2<CR>", "Increase window width")
 
--- Buffer navigation
-map("n", "<S-l>", "<cmd>bnext<CR>", "Next buffer")
-map("n", "<S-h>", "<cmd>bprevious<CR>", "Previous buffer")
+-- Buffer delete (navigation lives in lua/plugins/bufferline.lua so that
+-- it goes through BufferLineCycle* and skips non-editor buffers like
+-- neo-tree).
 map("n", "<leader>bd", "<cmd>bdelete<CR>", "Delete buffer")
 
 -- Better indent in visual mode

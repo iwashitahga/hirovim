@@ -1,0 +1,13 @@
+# Old AstroNvim config, kept locally for reference
+nvim.bak/
+
+# Lazy.nvim runtime artifacts (not present when symlinked, but guard anyway)
+lazy-lock.json.local
+
+# Spell files, swap, undo
+spell/
+*.swp
+*.swo
+
+# OS
+.DS_Store

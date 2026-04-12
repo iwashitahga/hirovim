@@ -27,6 +27,7 @@ opt.background = "light"
 opt.pumheight = 10
 opt.showmode = false
 opt.laststatus = 3
+opt.cmdheight = 0
 
 opt.undofile = true
 opt.swapfile = false

@@ -69,7 +69,11 @@ return {
           "  Find file",
           ":lua require('telescope.builtin').find_files({ initial_mode = 'normal' })<CR>"
         ),
-        dashboard.button("r", "  Recent files", "<cmd>Telescope oldfiles<CR>"),
+        dashboard.button(
+          "r",
+          "  Recent files",
+          ":lua require('telescope.builtin').oldfiles({ initial_mode = 'normal' })<CR>"
+        ),
         dashboard.button("g", "  Live grep", "<cmd>Telescope live_grep<CR>"),
         dashboard.button("n", "  New file", "<cmd>ene <BAR> startinsert<CR>"),
         dashboard.button("l", "  Lazy", "<cmd>Lazy<CR>"),

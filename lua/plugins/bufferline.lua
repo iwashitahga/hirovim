@@ -11,12 +11,6 @@ return {
     dependencies = { "nvim-tree/nvim-web-devicons" },
     event = "VeryLazy",
     keys = {
-      -- Tab navigation (skip neo-tree etc.)
-      { "<A-l>", "<cmd>BufferLineCycleNext<CR>", desc = "Next tab" },
-      { "<A-h>", "<cmd>BufferLineCyclePrev<CR>", desc = "Previous tab" },
-      -- Move current tab left / right
-      { "<A-L>", "<cmd>BufferLineMoveNext<CR>", desc = "Move tab right" },
-      { "<A-H>", "<cmd>BufferLineMovePrev<CR>", desc = "Move tab left" },
       -- Close management
       { "<leader>bp", "<cmd>BufferLineTogglePin<CR>", desc = "Toggle pin buffer" },
       { "<leader>bP", "<cmd>BufferLineGroupClose ungrouped<CR>", desc = "Delete non-pinned buffers" },

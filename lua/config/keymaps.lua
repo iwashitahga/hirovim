@@ -21,11 +21,7 @@ map("n", "<C-Down>", "<cmd>resize -2<CR>", "Decrease window height")
 map("n", "<C-Left>", "<cmd>vertical resize -2<CR>", "Decrease window width")
 map("n", "<C-Right>", "<cmd>vertical resize +2<CR>", "Increase window width")
 
--- Buffer / tab navigation. Defined here (not in bufferline's lazy-keys)
--- so the mapping is registered eagerly and overrides Vim defaults like
--- `H` = top-of-screen and `L` = bottom-of-screen from the first keystroke.
-map("n", "<S-l>", "<cmd>BufferLineCycleNext<CR>", "Next tab")
-map("n", "<S-h>", "<cmd>BufferLineCyclePrev<CR>", "Previous tab")
+-- Buffer / tab navigation.
 map("n", "<A-l>", "<cmd>BufferLineCycleNext<CR>", "Next tab")
 map("n", "<A-h>", "<cmd>BufferLineCyclePrev<CR>", "Previous tab")
 map("n", "<A-L>", "<cmd>BufferLineMoveNext<CR>", "Move tab right")

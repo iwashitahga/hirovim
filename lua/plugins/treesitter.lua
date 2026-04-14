@@ -21,6 +21,8 @@ local parsers = {
   "query",
   "regex",
   "rust",
+  "hcl",
+  "terraform",
   "toml",
   "tsx",
   "typescript",

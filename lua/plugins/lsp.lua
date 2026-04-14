@@ -3,7 +3,7 @@
 -- configs (cmd, filetypes, root_dir, ...) that get registered via
 -- `vim.lsp.config` when the plugin is loaded.
 
-local servers = { "lua_ls", "ts_ls", "pyright" }
+local servers = { "lua_ls", "ts_ls", "pyright", "terraformls" }
 
 return {
   {

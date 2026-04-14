@@ -42,6 +42,34 @@ return {
       })
 
       -- Per-server overrides.
+      -- Prefer per-module markers over .git so terraform-ls treats each
+      -- env directory (env/prod, env/stg, ...) in a monorepo as its own
+      -- module. Without this, root_dir collapses to the repo root and
+      -- var/local completion across modules gets confused.
+      vim.lsp.config("terraformls", {
+        -- Resolve root per module (env/prod, env/stg, _shared/modules/*).
+        -- Prefer init markers, fall back to any .tf sibling, then the file's
+        -- own directory so pre-init modules still attach correctly.
+        root_dir = function(bufnr, on_dir)
+          local fname = vim.api.nvim_buf_get_name(bufnr)
+          local start = vim.fs.dirname(fname)
+          local hit = vim.fs.find(
+            { ".terraform.lock.hcl", ".terraform", "terragrunt.hcl" },
+            { path = start, upward = true, stop = vim.loop.os_homedir() }
+          )[1]
+          if hit then
+            on_dir(vim.fs.dirname(hit))
+            return
+          end
+          -- No init marker: use the nearest ancestor that contains any .tf file.
+          local tf = vim.fs.find(
+            function(name) return name:match("%.tf$") or name:match("%.tf%.json$") end,
+            { path = start, upward = true, type = "file", stop = vim.loop.os_homedir() }
+          )[1]
+          on_dir(tf and vim.fs.dirname(tf) or start)
+        end,
+      })
+
       vim.lsp.config("lua_ls", {
         settings = {
           Lua = {

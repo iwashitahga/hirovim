@@ -1,6 +1,4 @@
-local map = function(mode, lhs, rhs, desc)
-  vim.keymap.set(mode, lhs, rhs, { silent = true, desc = desc })
-end
+local map = function(mode, lhs, rhs, desc) vim.keymap.set(mode, lhs, rhs, { silent = true, desc = desc }) end
 
 -- Clear search highlight
 map("n", "<Esc>", "<cmd>nohlsearch<CR>", "Clear hlsearch")
@@ -31,20 +29,16 @@ map("n", "<A-H>", "<cmd>BufferLineMovePrev<CR>", "Move tab left")
 -- neo-tree's close_if_last_window lets the whole Neovim instance exit.
 local function close_buffer()
   local current = vim.api.nvim_get_current_buf()
-  local listed = vim.tbl_filter(function(b)
-    return vim.bo[b].buflisted and b ~= current
-  end, vim.api.nvim_list_bufs())
+  local listed = vim.tbl_filter(function(b) return vim.bo[b].buflisted and b ~= current end, vim.api.nvim_list_bufs())
   if #listed == 0 then
-    vim.cmd("enew") -- spawn a fresh [No Name] so the window survives
+    vim.cmd "enew" -- spawn a fresh [No Name] so the window survives
   else
-    vim.cmd("bprevious")
+    vim.cmd "bprevious"
   end
-  if vim.api.nvim_buf_is_valid(current) then
-    vim.cmd("bdelete! " .. current)
-  end
+  if vim.api.nvim_buf_is_valid(current) then vim.cmd("bdelete! " .. current) end
 end
 map("n", "<leader>bd", close_buffer, "Delete buffer")
-map("n", "<A-r>", close_buffer, "Delete buffer")
+map("n", "<A-w>", close_buffer, "Delete buffer")
 
 -- Better indent in visual mode
 map("v", "<", "<gv", "Indent left")

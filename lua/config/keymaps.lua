@@ -29,7 +29,7 @@ map("n", "<A-H>", "<cmd>BufferLineMovePrev<CR>", "Move tab left")
 -- Delete the current buffer while keeping the window layout intact.
 -- Plain `:bdelete` can close the last editor window, which combined with
 -- neo-tree's close_if_last_window lets the whole Neovim instance exit.
-map("n", "<leader>bd", function()
+local function close_buffer()
   local current = vim.api.nvim_get_current_buf()
   local listed = vim.tbl_filter(function(b)
     return vim.bo[b].buflisted and b ~= current
@@ -42,7 +42,9 @@ map("n", "<leader>bd", function()
   if vim.api.nvim_buf_is_valid(current) then
     vim.cmd("bdelete! " .. current)
   end
-end, "Delete buffer")
+end
+map("n", "<leader>bd", close_buffer, "Delete buffer")
+map("n", "<A-r>", close_buffer, "Delete buffer")
 
 -- Better indent in visual mode
 map("v", "<", "<gv", "Indent left")

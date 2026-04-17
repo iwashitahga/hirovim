@@ -29,10 +29,17 @@ return {
     dependencies = { "hrsh7th/cmp-nvim-lsp" },
     config = function()
       -- Diagnostics UI
+      -- virtual_text truncates long messages on the code line, so disable it
+      -- and show the full (wrapped) message under the current line via
+      -- virtual_lines. `jump.float = true` pops the diagnostic float after a
+      -- `[d` / `]d` jump so the entire message is readable even before virtual_lines
+      -- renders on the new line.
       vim.diagnostic.config {
-        virtual_text = { prefix = "●" },
+        virtual_text = false,
+        virtual_lines = { current_line = true },
         severity_sort = true,
-        float = { border = "rounded" },
+        float = { border = "rounded", source = "if_many" },
+        jump = { float = true },
       }
 
       -- Global defaults applied to every server via wildcard config.
@@ -105,6 +112,16 @@ return {
           map({ "n", "v" }, "<leader>ca", vim.lsp.buf.code_action, "Code action")
           map("n", "[d", function() vim.diagnostic.jump { count = -1 } end, "Prev diagnostic")
           map("n", "]d", function() vim.diagnostic.jump { count = 1 } end, "Next diagnostic")
+          map("n", "[e", function()
+            vim.diagnostic.jump { count = -1, severity = vim.diagnostic.severity.ERROR }
+          end, "Prev error")
+          map("n", "]e", function()
+            vim.diagnostic.jump { count = 1, severity = vim.diagnostic.severity.ERROR }
+          end, "Next error")
+          map("n", "<leader>cd", vim.diagnostic.open_float, "Show line diagnostic")
+          map("n", "<leader>xq", function()
+            vim.diagnostic.setqflist { severity = { min = vim.diagnostic.severity.WARN } }
+          end, "Diagnostics → quickfix")
         end,
       })
     end,

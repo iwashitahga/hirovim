@@ -29,14 +29,36 @@ return {
     dependencies = { "hrsh7th/cmp-nvim-lsp" },
     config = function()
       -- Diagnostics UI
-      -- virtual_text truncates long messages on the code line, so disable it
-      -- and show the full (wrapped) message under the current line via
-      -- virtual_lines. `jump.float = true` pops the diagnostic float after a
-      -- `[d` / `]d` jump so the entire message is readable even before virtual_lines
-      -- renders on the new line.
+      -- virtual_text truncates long messages on the code line, so we render
+      -- them under the current line with virtual_lines instead. virt_lines
+      -- extmarks do NOT honour 'wrap', so a long TS error would still run off
+      -- the right edge of the window; wrap the message manually so each
+      -- segment becomes its own virtual line.
+      local function wrap_diagnostic(diagnostic)
+        local win = vim.api.nvim_get_current_win()
+        local gutter = vim.fn.getwininfo(win)[1].textoff or 0
+        local width = vim.api.nvim_win_get_width(win) - gutter - 2
+        if width < 30 then width = 30 end
+        local out = {}
+        for paragraph in vim.gsplit(diagnostic.message, "\n", { plain = true }) do
+          while vim.fn.strdisplaywidth(paragraph) > width do
+            local break_at = width
+            for i = width, 1, -1 do
+              if paragraph:sub(i, i):match("%s") then
+                break_at = i
+                break
+              end
+            end
+            table.insert(out, paragraph:sub(1, break_at - 1))
+            paragraph = paragraph:sub(break_at + 1)
+          end
+          table.insert(out, paragraph)
+        end
+        return table.concat(out, "\n")
+      end
       vim.diagnostic.config {
         virtual_text = false,
-        virtual_lines = { current_line = true },
+        virtual_lines = { current_line = true, format = wrap_diagnostic },
         severity_sort = true,
         float = { border = "rounded", source = "if_many" },
         jump = { float = true },

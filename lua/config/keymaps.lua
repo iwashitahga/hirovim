@@ -40,6 +40,12 @@ end
 map("n", "<leader>bd", close_buffer, "Delete buffer")
 map("n", "<A-w>", close_buffer, "Delete buffer")
 
+-- Close quickfix / location list (the panel that appears after gd, gr, etc.)
+map("n", "gq", function()
+  vim.cmd "cclose"
+  vim.cmd "lclose"
+end, "Close quickfix / loclist")
+
 -- Better indent in visual mode
 map("v", "<", "<gv", "Indent left")
 map("v", ">", ">gv", "Indent right")

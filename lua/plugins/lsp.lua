@@ -125,10 +125,17 @@ return {
           local map = function(mode, lhs, rhs, desc)
             vim.keymap.set(mode, lhs, rhs, { buffer = bufnr, silent = true, desc = desc })
           end
-          map("n", "gd", vim.lsp.buf.definition, "Go to definition")
+          -- Telescope pickers give us preview + incremental filtering for
+          -- multi-result LSP queries. Start in normal mode for list browsing
+          -- (references/definitions/...) and insert mode for symbol search.
+          local tb = require("telescope.builtin")
+          map("n", "gd", function() tb.lsp_definitions { initial_mode = "normal" } end, "Go to definition")
           map("n", "gD", vim.lsp.buf.declaration, "Go to declaration")
-          map("n", "gr", vim.lsp.buf.references, "References")
-          map("n", "gi", vim.lsp.buf.implementation, "Implementation")
+          map("n", "gr", function() tb.lsp_references { initial_mode = "normal" } end, "References")
+          map("n", "gi", function() tb.lsp_implementations { initial_mode = "normal" } end, "Implementation")
+          map("n", "gy", function() tb.lsp_type_definitions { initial_mode = "normal" } end, "Type definition")
+          map("n", "<leader>fs", tb.lsp_document_symbols, "Document symbols")
+          map("n", "<leader>fS", tb.lsp_dynamic_workspace_symbols, "Workspace symbols")
           map("n", "K", vim.lsp.buf.hover, "Hover")
           map("n", "<leader>rn", vim.lsp.buf.rename, "Rename")
           map({ "n", "v" }, "<leader>ca", vim.lsp.buf.code_action, "Code action")

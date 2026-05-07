@@ -46,6 +46,13 @@ map("n", "gq", function()
   vim.cmd "lclose"
 end, "Close quickfix / loclist")
 
+-- GitHub PR helpers via the `gh` CLI (no octo load required).
+-- Output shows in cmdline so the PR URL / status message stays visible.
+map("n", "<leader>gc", "<cmd>!gh pr create --draft --fill<CR>", "PR: create draft")
+map("n", "<leader>gC", "<cmd>!gh pr create --fill<CR>", "PR: create ready")
+map("n", "<leader>gm", "<cmd>!gh pr ready<CR>", "PR: mark ready")
+map("n", "<leader>gM", "<cmd>!gh pr ready --undo<CR>", "PR: mark draft")
+
 -- Better indent in visual mode
 map("v", "<", "<gv", "Indent left")
 map("v", ">", ">gv", "Indent right")

@@ -1,7 +1,8 @@
 -- Git integration.
 --
--- gitsigns    : inline hunk UI (signs, navigation, stage/reset/preview, blame)
+-- gitsigns     : inline hunk UI (signs, navigation, stage/reset/preview, blame)
 -- diffview.nvim: full-window diff browser and file history viewer
+-- octo.nvim    : GitHub PRs/issues/reviews via the gh CLI
 --
 -- Keymap prefix: <leader>g*
 
@@ -98,6 +99,26 @@ return {
         listing_style = "tree",
         win_config = { position = "left", width = 35 },
       },
+    },
+  },
+
+  {
+    "pwntester/octo.nvim",
+    cmd = "Octo",
+    dependencies = {
+      "nvim-lua/plenary.nvim",
+      "nvim-telescope/telescope.nvim",
+      "nvim-tree/nvim-web-devicons",
+    },
+    keys = {
+      { "<leader>go", "<cmd>Octo<CR>", desc = "Octo: menu" },
+      { "<leader>gP", "<cmd>Octo pr list<CR>", desc = "Octo: PR list" },
+      { "<leader>gI", "<cmd>Octo issue list<CR>", desc = "Octo: issue list" },
+    },
+    opts = {
+      enable_builtin = true,
+      picker = "telescope",
+      use_local_fs = true,
     },
   },
 }

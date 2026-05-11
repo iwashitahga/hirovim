@@ -1,8 +1,11 @@
 return {
   -- vim-sandwich (ported from previous config)
+  -- Loaded eagerly so its `<Plug>` mappings (sa/sd/sr/s) are installed before
+  -- any buffer keystroke; lazy event-loading raced flash.nvim's normal-mode
+  -- mapping for `s` and left `sa` falling through to vim's builtin substitute.
   {
     "machakann/vim-sandwich",
-    event = { "BufReadPost", "BufNewFile" },
+    lazy = false,
   },
 
   -- Autopairs with a tex/latex $...$ rule (ported from previous config)

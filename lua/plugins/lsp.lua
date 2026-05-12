@@ -116,6 +116,18 @@ return {
         group = vim.api.nvim_create_augroup("hirovim_lsp_attach", { clear = true }),
         callback = function(args)
           local bufnr = args.buf
+          local client = vim.lsp.get_client_by_id(args.data.client_id)
+
+          -- terraform-ls returns broken semantic-token deltas (negative
+          -- ints sent as uint32 like 4294967163) when the file contains
+          -- multi-byte chars such as Japanese comments. Neovim then spins
+          -- trying to apply tokens at impossible positions and the UI
+          -- freezes. Disable semantic tokens for this server until the
+          -- upstream encoding bug is fixed.
+          if client and client.name == "terraformls" then
+            client.server_capabilities.semanticTokensProvider = nil
+          end
+
           local map = function(mode, lhs, rhs, desc)
             vim.keymap.set(mode, lhs, rhs, { buffer = bufnr, silent = true, desc = desc })
           end

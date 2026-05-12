@@ -77,8 +77,11 @@ return {
       -- var/local completion across modules gets confused.
       vim.lsp.config("terraformls", {
         -- Resolve root per module (env/prod, env/stg, _shared/modules/*).
-        -- Prefer init markers, fall back to any .tf sibling, then the file's
-        -- own directory so pre-init modules still attach correctly.
+        -- Prefer init markers; otherwise treat the file's own directory as
+        -- the module root. The previous function-predicate vim.fs.find that
+        -- walked upward looking for any *.tf file did a sync listdir on
+        -- every parent directory, which froze the UI when opening .tf files
+        -- in deeply-nested or file-dense paths.
         root_dir = function(bufnr, on_dir)
           local fname = vim.api.nvim_buf_get_name(bufnr)
           local start = vim.fs.dirname(fname)
@@ -86,16 +89,7 @@ return {
             { ".terraform.lock.hcl", ".terraform", "terragrunt.hcl" },
             { path = start, upward = true, stop = vim.loop.os_homedir() }
           )[1]
-          if hit then
-            on_dir(vim.fs.dirname(hit))
-            return
-          end
-          -- No init marker: use the nearest ancestor that contains any .tf file.
-          local tf = vim.fs.find(
-            function(name) return name:match("%.tf$") or name:match("%.tf%.json$") end,
-            { path = start, upward = true, type = "file", stop = vim.loop.os_homedir() }
-          )[1]
-          on_dir(tf and vim.fs.dirname(tf) or start)
+          on_dir(hit and vim.fs.dirname(hit) or start)
         end,
       })
 

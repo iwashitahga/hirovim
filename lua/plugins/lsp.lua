@@ -3,7 +3,7 @@
 -- configs (cmd, filetypes, root_dir, ...) that get registered via
 -- `vim.lsp.config` when the plugin is loaded.
 
-local servers = { "lua_ls", "ts_ls", "pyright", "terraformls" }
+local servers = { "lua_ls", "ts_ls", "pyright", "terraformls", "helm_ls", "yamlls" }
 
 return {
   {
@@ -23,10 +23,19 @@ return {
     },
   },
 
+  -- Helm template files (templates/*.yaml, *.tpl, helmfile.yaml, ...) are not
+  -- a filetype Neovim knows about. vim-helm ships the ftdetect rules that set
+  -- them to `helm`, which is what helm_ls attaches to. lazy.nvim reads the
+  -- plugin's ftdetect/ dir and loads it when a matching file is opened.
+  { "towolf/vim-helm", ft = "helm" },
+
   {
     "neovim/nvim-lspconfig",
     event = { "BufReadPre", "BufNewFile" },
-    dependencies = { "hrsh7th/cmp-nvim-lsp" },
+    -- schemastore.nvim feeds yamlls the JSON Schema Store catalog so well-known
+    -- files (Chart.yaml, kustomization.yaml, GitHub workflows, ...) validate
+    -- and complete by filename without per-file modelines.
+    dependencies = { "hrsh7th/cmp-nvim-lsp", "b0o/schemastore.nvim" },
     config = function()
       -- Diagnostics UI
       -- virtual_text truncates long messages on the code line, so we render
@@ -91,6 +100,31 @@ return {
           )[1]
           on_dir(hit and vim.fs.dirname(hit) or start)
         end,
+      })
+
+      -- yamlls: drive schema association from schemastore.nvim instead of the
+      -- server's built-in fetcher (disabled to avoid double matching). The
+      -- `kubernetes` key is a yaml-language-server special-case: it points at
+      -- the bundled k8s schema rather than a URL, mapped here to the dirs/glob
+      -- where raw manifests usually live. Any file can still opt in per-file
+      -- with a `# yaml-language-server: $schema=...` modeline.
+      vim.lsp.config("yamlls", {
+        settings = {
+          redhat = { telemetry = { enabled = false } },
+          yaml = {
+            format = { enable = true },
+            validate = true,
+            schemaStore = { enable = false, url = "" },
+            schemas = vim.tbl_extend("force", require("schemastore").yaml.schemas(), {
+              kubernetes = {
+                "k8s/**/*.yaml",
+                "kubernetes/**/*.yaml",
+                "manifests/**/*.yaml",
+                "*.k8s.yaml",
+              },
+            }),
+          },
+        },
       })
 
       vim.lsp.config("lua_ls", {

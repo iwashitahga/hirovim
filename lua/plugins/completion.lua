@@ -54,12 +54,17 @@ return {
             end
           end, { "i", "s" }),
         }),
+        -- nvim-cmp はファジーマッチなので、friendly-snippets の terraform pack
+        -- (tf-fastly, tf-aws_flow_log, ...) が 1 文字打っただけで数十件ヒットし、
+        -- LSP の候補 (aws_security_group の ingress 内なら from_port など) を
+        -- 押し流してしまう。LSP を最優先にし、snippet は 2 文字以上 + 上限つきに
+        -- 落として「本命が snippet の山に埋もれる」のを防ぐ。
         sources = cmp.config.sources({
-          { name = "nvim_lsp" },
-          { name = "luasnip" },
-          { name = "path" },
+          { name = "nvim_lsp", priority = 1000 },
+          { name = "luasnip", priority = 250, keyword_length = 2, max_item_count = 5 },
+          { name = "path", priority = 250 },
         }, {
-          { name = "buffer" },
+          { name = "buffer", keyword_length = 3 },
         }),
       })
     end,

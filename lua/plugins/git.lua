@@ -4,7 +4,7 @@
 -- diffview.nvim: full-window diff browser and file history viewer
 -- octo.nvim    : GitHub PRs/issues/reviews via the gh CLI
 --
--- Keymap prefix: <leader>g*
+-- Keymap prefix: <leader>g* (local git)  /  <leader>p* (GitHub PR review)
 
 return {
   {
@@ -112,8 +112,34 @@ return {
     },
     keys = {
       { "<leader>go", "<cmd>Octo<CR>", desc = "Octo: menu" },
-      { "<leader>gP", "<cmd>Octo pr list<CR>", desc = "Octo: PR list" },
       { "<leader>gI", "<cmd>Octo issue list<CR>", desc = "Octo: issue list" },
+
+      -- PR review lives under its own <leader>p prefix.
+      -- `review start` / `resume` resolve the PR from the current buffer OR the
+      -- checked-out branch, so <leader>po then <leader>pv is the usual path.
+      { "<leader>pl", "<cmd>Octo pr list<CR>", desc = "PR: list" },
+      -- Cross-repo. `Octo pr search` is repo-scoped, so the top-level
+      -- `Octo search` (GitHub search syntax) is what spans repositories.
+      --
+      -- `involves:@me -author:@me` is wider than `review-requested:@me`: it also
+      -- catches PRs commented on or mentioned in, minus one's own. Reviews often
+      -- continue past the point where the request is cleared, so this keeps them.
+      {
+        "<leader>pR",
+        "<cmd>Octo search is:pr is:open involves:@me -author:@me sort:updated-desc<CR>",
+        desc = "PR: involves me, not mine",
+      },
+      { "<leader>po", "<cmd>Octo pr checkout<CR>", desc = "PR: checkout (picker if not in a PR buffer)" },
+      { "<leader>pD", "<cmd>Octo pr diff<CR>", desc = "PR: diff" },
+      { "<leader>pb", "<cmd>Octo pr browser<CR>", desc = "PR: open in browser" },
+
+      { "<leader>pv", "<cmd>Octo review start<CR>", desc = "Review: start" },
+      { "<leader>pr", "<cmd>Octo review resume<CR>", desc = "Review: resume pending" },
+      { "<leader>ps", "<cmd>Octo review submit<CR>", desc = "Review: submit" },
+      { "<leader>pd", "<cmd>Octo review discard<CR>", desc = "Review: discard" },
+      { "<leader>pc", "<cmd>Octo review comments<CR>", desc = "Review: pending comments" },
+      { "<leader>pt", "<cmd>Octo review thread<CR>", desc = "Review: threads" },
+      { "<leader>pq", "<cmd>Octo review close<CR>", desc = "Review: close tab" },
     },
     opts = {
       enable_builtin = true,

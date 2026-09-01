@@ -39,6 +39,11 @@ return {
   {
     "folke/which-key.nvim",
     event = "VeryLazy",
-    opts = {},
+    opts = {
+      spec = {
+        { "<leader>p", group = "PR / review" },
+        { "<leader>a", group = "Agent (claude)" },
+      },
+    },
   },
 }

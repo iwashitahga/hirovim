@@ -35,3 +35,29 @@ vim.api.nvim_create_autocmd("VimResized", {
   group = augroup("resize_splits"),
   command = "tabdo wincmd =",
 })
+
+-- Reload buffers changed on disk.
+--
+-- An agent (claude) edits files in the same worktree while they are open here,
+-- so without this the buffer goes stale and :w reports W12 and clobbers the
+-- agent's edits. 'autoread' only takes effect when something triggers a check,
+-- hence the :checktime calls below.
+vim.opt.autoread = true
+
+vim.api.nvim_create_autocmd({ "FocusGained", "BufEnter", "CursorHold", "CursorHoldI", "TermClose" }, {
+  group = augroup("check_file_changed"),
+  callback = function()
+    -- Skip command-line window and unnamed/special buffers.
+    if vim.fn.getcmdwintype() ~= "" or vim.bo.buftype ~= "" then
+      return
+    end
+    vim.cmd("checktime")
+  end,
+})
+
+vim.api.nvim_create_autocmd("FileChangedShellPost", {
+  group = augroup("file_changed_notify"),
+  callback = function()
+    vim.notify("Buffer reloaded from disk", vim.log.levels.INFO)
+  end,
+})

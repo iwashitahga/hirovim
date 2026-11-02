@@ -93,6 +93,10 @@ return {
         -- in deeply-nested or file-dense paths.
         root_dir = function(bufnr, on_dir)
           local fname = vim.api.nvim_buf_get_name(bufnr)
+          -- Diffview names historical and index buffers with a diffview:// URI.
+          -- They are not Terraform modules; attaching terraform-ls to them
+          -- makes it interpret the virtual path as a workspace folder.
+          if fname:match("^diffview://") or vim.bo[bufnr].buftype ~= "" then return end
           local start = vim.fs.dirname(fname)
           local hit = vim.fs.find(
             { ".terraform.lock.hcl", ".terraform", "terragrunt.hcl" },

@@ -6,7 +6,9 @@ opt.signcolumn = "yes"
 opt.cursorline = true
 opt.scrolloff = 8
 opt.sidescrolloff = 8
-opt.wrap = false
+opt.wrap = true
+opt.linebreak = true
+opt.breakindent = true
 
 opt.expandtab = true
 opt.shiftwidth = 2

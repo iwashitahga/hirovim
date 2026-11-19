@@ -7,7 +7,9 @@ opt.cursorline = true
 opt.scrolloff = 8
 opt.sidescrolloff = 8
 opt.wrap = true
-opt.linebreak = true
+-- linebreak only breaks at ASCII 'breakat' chars, so mixed Japanese/English
+-- lines wrap far too early; break at the window edge instead.
+opt.linebreak = false
 opt.breakindent = true
 
 opt.expandtab = true

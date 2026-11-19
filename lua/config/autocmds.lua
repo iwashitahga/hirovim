@@ -30,6 +30,14 @@ vim.api.nvim_create_autocmd("BufWritePre", {
   end,
 })
 
+-- linebreak only breaks at ASCII 'breakat' chars, so markdown with mixed
+-- Japanese/English wraps far before the window edge. Break at the edge instead.
+vim.api.nvim_create_autocmd("FileType", {
+  group = augroup("markdown_wrap"),
+  pattern = "markdown",
+  callback = function() vim.opt_local.linebreak = false end,
+})
+
 -- Resize splits when vim is resized
 vim.api.nvim_create_autocmd("VimResized", {
   group = augroup("resize_splits"),
